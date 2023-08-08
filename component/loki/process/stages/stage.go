@@ -41,6 +41,7 @@ const (
 	StageTypeLabelAllow       = "labelallow"
 	StageTypeStaticLabels     = "static_labels"
 	StageTypeGeoIP            = "geoip"
+	StageTypeReverseDNS       = "reverse_dns"
 )
 
 // Processor takes an existing set of labels, timestamp and log entry and returns either a possibly mutated
@@ -219,6 +220,11 @@ func New(logger log.Logger, jobName *string, cfg StageConfig, registerer prometh
 		}
 	case cfg.GeoIPConfig != nil:
 		s, err = newGeoIPStage(logger, *cfg.GeoIPConfig)
+		if err != nil {
+			return nil, err
+		}
+	case cfg.ReverseDNSConfig != nil:
+		s, err = newRDNSStage(logger, *cfg.ReverseDNSConfig)
 		if err != nil {
 			return nil, err
 		}
